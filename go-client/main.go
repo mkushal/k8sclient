@@ -60,6 +60,12 @@ func launchK8sJob(clientset *kubernetes.Clientset, jobName *string, image *strin
 	var completions int32 = 2
 	var parallelism int32 = 2
 
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println("panic occurred:", err)
+		}
+	}()
+
 	jobSpec := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      *jobName,
@@ -97,7 +103,7 @@ func launchK8sJob(clientset *kubernetes.Clientset, jobName *string, image *strin
 	}
 
 	//print job details
-	log.Println("Created K8s job successfully")
+	log.Println("Created K8s job successfully" + *jobName)
 }
 
 func main() {
