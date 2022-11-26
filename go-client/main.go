@@ -19,14 +19,13 @@ import (
 	clientcmd "k8s.io/client-go/tools/clientcmd"
 )
 
-// Users struct which contains
-// an array of users
+// BatchJobs struct which contains
+// an array of batchJob1
 type BatchJobs struct {
 	BatchJobs []Job `json:"batchJob1"`
 }
 
-// User struct which contains a name
-// a type and a list of social links
+// Job struct which contains a name
 type Job struct {
 	JobName    string `json:"jobName"`
 	Image      string `json:"image"`
@@ -109,23 +108,22 @@ func main() {
 		fmt.Println(err)
 	}
 
-	fmt.Println("Successfully Opened users.json")
+	fmt.Println("Successfully Opened batch.json")
 	// defer the closing of our jsonFile so that we can parse it later on
 	defer jsonFile.Close()
 
 	// read our opened xmlFile as a byte array.
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 
-	// we initialize our Users array
+	// we initialize our BatchJobs array
 	var batchJobs BatchJobs
 
 	// we unmarshal our byteArray which contains our
-	// jsonFile's content into 'users' which we defined above
+	// jsonFile's content into 'batchJob1' which we defined above
 	json.Unmarshal(byteValue, &batchJobs)
 
-	// we iterate through every user within our users array and
-	// print out the user Type, their name, and their facebook url
-	// as just an example
+	// we iterate through every Job our BatchJobs array and
+	// print out the batchJob1 their name
 	for i := 0; i < len(batchJobs.BatchJobs); i++ {
 		fmt.Println("Job Name: " + batchJobs.BatchJobs[i].JobName)
 		fmt.Println("Job Image: " + batchJobs.BatchJobs[i].Image)
