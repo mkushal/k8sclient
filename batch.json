@@ -1,0 +1,24 @@
+{
+ "batchJob1": [
+     {
+       "jobName": "job1",
+       "image": "docker_img_1",
+       "requestMem": "500Mi",
+       "requestCpu": "200m"
+     },
+     {
+       "jobName": "job2",
+       "image": "docker_img_2",
+       "requestMem": "1Gi",
+       "requestCpu": "100m"
+     },
+     {
+       "jobName": "job3",
+       "image": "docker_img_3",
+       "requestMem": "2Gi",
+       "requestCpu": "200m"
+     }
+   ]
+}
+
+
