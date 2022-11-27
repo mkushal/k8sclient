@@ -5,7 +5,7 @@ Resilience -
 Performance - For the performance from Infrastructure side , we should use auto scalling 
 Cost efficiency
 
-To make application deployments highly available and fault-tolerant, it’s a good practice to run pods on nodes deployed in separate availability zones.
+> To make application deployments highly available and fault-tolerant, it’s a good practice to run pods on nodes deployed in separate availability zones.
 
 To improve the performance of certain services, avoid placing them with other services that consume a lot of resources.
 
