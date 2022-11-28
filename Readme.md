@@ -1,3 +1,5 @@
+#Architectural Challenge
+
 **Question 1**
 How would you improve the current design to achieve better:
 High availability 
