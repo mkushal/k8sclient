@@ -1,4 +1,4 @@
-# Architectural Challenge
+# Part 1 : Architectural Challenge
 
 **Question 1**
 How would you improve the current design to achieve better:
@@ -29,3 +29,9 @@ Propose a high-level disaster recovery plan for the current architecture.
 
 > Regular backups server including software and configuration on the server
 Multisite application Deployment ( Active Datacenter ==> Standby Datacenter )
+
+# Part 2 : Technical Challenge
+
+I have created a script in go , which will read batch.json , fetch parameters jobName, image, requestMem & requestCpu values for each job and using podaffinity feature of kubernetes deploy the jobs on minimum number of nodes as we required. 
+
+Location [title](https://github.com/mkushal/k8sclient/tree/main/go-client)
