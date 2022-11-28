@@ -13,19 +13,20 @@ import (
 
 	batchv1 "k8s.io/api/batch/v1"
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
+	resource "k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kubernetes "k8s.io/client-go/kubernetes"
-	clientcmd "k8s.io/client-go/tools/clientcmd"
+	clientcmd "k8s.io/client-go/tools/clientcmd"	
 )
 
 // BatchJobs struct which contains
-// an array of batchJob1
+// an array of baychJob1
 type BatchJobs struct {
 	BatchJobs []Job `json:"batchJob1"`
 }
 
-// Job struct which contains a name
+// User struct which contains a name
+// a type and a list of social links
 type Job struct {
 	JobName    string `json:"jobName"`
 	Image      string `json:"image"`
@@ -36,7 +37,7 @@ type Job struct {
 func connectToK8s() *kubernetes.Clientset {
 	home, exists := os.LookupEnv("HOME")
 	if !exists {
-		home = "/c/Users/kusha"
+		home = "/c/Users/kushal"
 	}
 
 	configPath := filepath.Join(home, ".kube", "config")
@@ -54,12 +55,16 @@ func connectToK8s() *kubernetes.Clientset {
 	return clientset
 }
 
-func launchK8sJob(clientset *kubernetes.Clientset, jobName *string, image *string, requestMem *string, requestCpu *string) {
+func launchK8sJob(clientset *kubernetes.Clientset, jobName *string, image *string, requestCpu *string, requestMem *string) {
 	jobs := clientset.BatchV1().Jobs("default")
 	var backOffLimit int32 = 0
 	var completions int32 = 2
 	var parallelism int32 = 2
+	labels := make(map[string]string)
+	labels["batchjobs-group"] = "batchjob1"	
+	var topologykey string = "kubernetes.io/hostname"
 
+    
 	defer func() {
 		if err := recover(); err != nil {
 			log.Println("panic occurred:", err)
@@ -70,25 +75,45 @@ func launchK8sJob(clientset *kubernetes.Clientset, jobName *string, image *strin
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      *jobName,
 			Namespace: "default",
+			Labels : labels,
 		},
 		Spec: batchv1.JobSpec{
-			Template: v1.PodTemplateSpec{
-				Spec: v1.PodSpec{
+			Template: v1.PodTemplateSpec{				
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      *jobName,
+					Namespace: "default",
+					Labels : labels,
+				},
+				Spec: v1.PodSpec{					
 					Containers: []v1.Container{
 						{
 							Name:  *jobName,
-							Image: *image,
-							//Command: strings.Split(*cmd, " "),
+							Image: *image,							
 							Command: strings.Split("ls", " "),
 							Resources: v1.ResourceRequirements{
 								Requests: v1.ResourceList{
 									"cpu":    resource.MustParse(*requestCpu),
 									"memory": resource.MustParse(*requestMem),
 								},
+							},							
+						},
+					},
+					Affinity: &v1.Affinity{
+						PodAffinity: &v1.PodAffinity {
+							PreferredDuringSchedulingIgnoredDuringExecution: []v1.WeightedPodAffinityTerm {
+								{
+									Weight: 100,
+									PodAffinityTerm: v1.PodAffinityTerm {
+										LabelSelector: &metav1.LabelSelector {
+											MatchLabels: labels,
+										},
+										TopologyKey: topologykey,
+									},									
+								},
 							},
 						},
 					},
-					RestartPolicy: v1.RestartPolicyNever,
+					RestartPolicy: v1.RestartPolicyNever,				
 				},
 			},
 			BackoffLimit: &backOffLimit,
@@ -97,9 +122,16 @@ func launchK8sJob(clientset *kubernetes.Clientset, jobName *string, image *strin
 		},
 	}
 
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println("panic occurred:", err)
+		}
+	}()
+
 	_, err := jobs.Create(context.TODO(), jobSpec, metav1.CreateOptions{})
 	if err != nil {
-		log.Fatalln("Failed to create K8s job.")
+		log.Fatalln("Failed to create K8s job." + *jobName)
+		log.Println("panic occurred:", err)
 	}
 
 	//print job details
@@ -121,15 +153,16 @@ func main() {
 	// read our opened xmlFile as a byte array.
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 
-	// we initialize our BatchJobs array
+	// we initialize our UBatchJobs array
 	var batchJobs BatchJobs
 
 	// we unmarshal our byteArray which contains our
-	// jsonFile's content into 'batchJob1' which we defined above
+	// jsonFile's content into 'batchjob1' which we defined above
 	json.Unmarshal(byteValue, &batchJobs)
 
-	// we iterate through every Job our BatchJobs array and
-	// print out the batchJob1 their name
+	// we iterate through every user within our batchjobs array and
+	// print out the user Type, their name, and their facebook url
+	// as just an example
 	for i := 0; i < len(batchJobs.BatchJobs); i++ {
 		fmt.Println("Job Name: " + batchJobs.BatchJobs[i].JobName)
 		fmt.Println("Job Image: " + batchJobs.BatchJobs[i].Image)
@@ -145,9 +178,7 @@ func main() {
 		requestCpu := (batchJobs.BatchJobs[i].RequestCpu)
 		//requestMem := flag.String("requestmem", "500Mi", "memory requested")
 		requestMem := (batchJobs.BatchJobs[i].RequestMem)
-
 		flag.Parse()
-
 		clientset := connectToK8s()
 		launchK8sJob(clientset, &jobName, &containerImage, &requestCpu, &requestMem)
 	}
