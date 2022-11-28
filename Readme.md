@@ -7,6 +7,7 @@ How would you improve the current design to achieve better:
 - Performance
 - Cost efficiency
 
+### Answer 1
 ```
 Considering the architecture mentioned in the diagram , with few assumtions I can suggest below.
  - For more high availability on whole deployment region we should have multi region implementation of our services.
