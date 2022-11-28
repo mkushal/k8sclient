@@ -1,5 +1,5 @@
 # Part 1 : Architectural Challenge
-
+---
 ## Question 1
 How would you improve the current design to achieve better:
 - High availability 
@@ -8,7 +8,6 @@ How would you improve the current design to achieve better:
 - Cost efficiency
 
 ### Answer 1
-```
 Considering the architecture mentioned in the diagram , with few assumtions I can suggest below.
  - For more high availability on whole deployment region we should have multi region implementation of our services.
  - To make application deployments highly available and fault-tolerant, it’s a good practice to run pods having more than 1 replicas on nodes deployed in separate availability zones. 
@@ -22,33 +21,37 @@ Considering the architecture mentioned in the diagram , with few assumtions I ca
  - Apart from above things , we should have standard devops practices like IaaC (terraform or similar), CI, Container Images Security Scanning etc.. 
  - Also we should have automated API testing , Performance testing for our Services involved in CI tool.
  - Messaging Queue should be also clustered for high availability.
-```
 
 
 
 ## Question 2
+
 The number of scan requests can increase/decrease randomly in a day and on most weekends the system receives almost no requests at all.
 What strategy would you suggest to save cost while still maintaining the best possible performance and scan completion times?
 
 ### Answer 2
----
+
 We should resize the k8s cluster based on traffic & resource consumption , 
 We should use kubernetes cluster autoscaler to extend the node capacity automatically when more parrallel jobs are getting executed to get performance in pick hours.
 During the time when we have lesser traffic autoscaler will shrink kubernetes cluster size to minimial number of nodes.
 
 ## Question 3
+
 In step 6, each job needs to mount the source code folder into every engine that needs to run. How would you store the source code and make sure that engines can run in a scalable way?
 
 ### Answer 3
+
 If We are using aws than We should use EFS , in case of azure it's  Microsoft Azure File Storage which can be used to pull & mount source code with Scanning job. 
 Also we may use same EFS source code directory across multiple jobs. Also it's a cost effective option for the storage.
 
 
 
 ## Question 4
+
 Propose a high-level disaster recovery plan for the current architecture.
 
 ### Answer 4
+
 - Regular database backup with specific retention period.
 - Regular Service configuration backup with specific retention period.
 - Multisite (region) application Deployment ( Active Datacenter ==> Standby Datacenter )
@@ -60,7 +63,7 @@ Propose a high-level disaster recovery plan for the current architecture.
 
 
 # Part 2 : Technical Challenge
-
+---
 I have created a script in go , which will read batch.json , fetch parameters jobName, image, requestMem & requestCpu values for each job and using podaffinity feature of kubernetes deploy the jobs on minimum number of nodes as we required. 
 
 Script can be found at [here](https://github.com/mkushal/k8sclient/tree/main/go-client)
