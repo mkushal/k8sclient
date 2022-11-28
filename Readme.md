@@ -7,6 +7,21 @@ How would you improve the current design to achieve better:
 - Performance
 - Cost efficiency
 
+```
+Considering the architecture mentioned in the diagram , with few assumtions I can suggest below.
+ - For more high availability on whole deployment region we should have multi region implementation of our services.
+ - To make application deployments highly available and fault-tolerant, it’s a good practice to run pods having more than 1 replicas on nodes deployed in separate availability zones. 
+ - To improve the performance of certain services, avoid placing them with other services that consume a lot of resources.
+ - For the better performance , we should use horizontal pod autoscaler.
+ - For the cost optimization we should implment cluster autoscaler / karpenter or similar solution which can automatically resize the cluster capacity in case of no usage.
+ - Also we can leverage AWS autoscaling group dynamic scalling policies to save the cost based on network traffic.
+ - we should also implment automatic monitoring & alerting for our deployments residing in kubernetes cluster. ( Prometheus + Grafana + All required exporters )
+ - Closely monitoring the exceptions in logs of deployments could help us proactively to avoid downtime later. (EFK / ELK Logging stack)
+ - If we are using aws than for optimize the cost we can use gp3 ebs volumes, spot instances for the stateless node groups etc..
+ - Apart from above things , we should have standard devops practices like IaaC (terraform or similar), CI, Container Images Security Scanning etc.. 
+ - Also we should have automated API testing , Performance testing for our Services involved in CI tool.
+ - Messaging Queue should be also clustered for high availability.
+```
 
 
 
