@@ -20,13 +20,13 @@ import (
 )
 
 // BatchJobs struct which contains
-// an array of baychJob1
+// an array of bachJob1
 type BatchJobs struct {
 	BatchJobs []Job `json:"batchJob1"`
 }
 
-// User struct which contains a name
-// a type and a list of social links
+// Job struct which contains a name
+// a type 
 type Job struct {
 	JobName    string `json:"jobName"`
 	Image      string `json:"image"`
@@ -150,7 +150,7 @@ func main() {
 	// defer the closing of our jsonFile so that we can parse it later on
 	defer jsonFile.Close()
 
-	// read our opened xmlFile as a byte array.
+	// read our opened File as a byte array.
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 
 	// we initialize our UBatchJobs array
@@ -161,22 +161,16 @@ func main() {
 	json.Unmarshal(byteValue, &batchJobs)
 
 	// we iterate through every user within our batchjobs array and
-	// print out the user Type, their name, and their facebook url
-	// as just an example
+	// print out 
 	for i := 0; i < len(batchJobs.BatchJobs); i++ {
 		fmt.Println("Job Name: " + batchJobs.BatchJobs[i].JobName)
 		fmt.Println("Job Image: " + batchJobs.BatchJobs[i].Image)
 		fmt.Println("Requested Memory: " + batchJobs.BatchJobs[i].RequestMem)
 		fmt.Println("Requested CPU: " + batchJobs.BatchJobs[i].RequestCpu)
 
-		//jobName := flag.String("jobname", "test-job", "The name of the job")
 		jobName := (batchJobs.BatchJobs[i].JobName)
-		//containerImage := flag.String("image", "ubuntu:latest", "Name of the container image")
 		containerImage := (batchJobs.BatchJobs[i].Image)
-		//entryCommand := flag.String("command", "ls", "The command to run inside the container")
-		//requestCpu := flag.String("requestcpu", "1", "cpu requested")
 		requestCpu := (batchJobs.BatchJobs[i].RequestCpu)
-		//requestMem := flag.String("requestmem", "500Mi", "memory requested")
 		requestMem := (batchJobs.BatchJobs[i].RequestMem)
 		flag.Parse()
 		clientset := connectToK8s()
