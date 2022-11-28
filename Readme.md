@@ -39,11 +39,23 @@ During the time when we have lesser traffic autoscaler will shrink kubernetes cl
 ## Question 3
 In step 6, each job needs to mount the source code folder into every engine that needs to run. How would you store the source code and make sure that engines can run in a scalable way?
 
+### Answer 3
+If We are using aws than We should use EFS , in case of azure it's  Microsoft Azure File Storage which can be used to pull & mount source code with Scanning job. 
+Also we may use same EFS source code directory across multiple jobs. Also it's a cost effective option for the storage.
 
 
 
 ## Question 4
 Propose a high-level disaster recovery plan for the current architecture.
+
+### Answer 4
+- Regular database backup with specific retention period.
+- Regular Service configuration backup with specific retention period.
+- Multisite (region) application Deployment ( Active Datacenter ==> Standby Datacenter )
+- Continuous Monitoring for service resources utilization & performance.
+- API SourceCode backup, IaaC backup
+- Also make restore plan & test it on preproduction environment.
+- Rotation of security keys, tokens should be done at regular intervals.
 
 
 
