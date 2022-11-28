@@ -34,4 +34,4 @@ Multisite application Deployment ( Active Datacenter ==> Standby Datacenter )
 
 I have created a script in go , which will read batch.json , fetch parameters jobName, image, requestMem & requestCpu values for each job and using podaffinity feature of kubernetes deploy the jobs on minimum number of nodes as we required. 
 
-Location [title](https://github.com/mkushal/k8sclient/tree/main/go-client)
+Script Script can be found at [here](https://github.com/mkushal/k8sclient/tree/main/go-client)
