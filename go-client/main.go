@@ -57,9 +57,9 @@ func connectToK8s() *kubernetes.Clientset {
 
 func launchK8sJob(clientset *kubernetes.Clientset, jobName *string, image *string, requestCpu *string, requestMem *string) {
 	jobs := clientset.BatchV1().Jobs("default")
-	var backOffLimit int32 = 0
-	var completions int32 = 2
-	var parallelism int32 = 2
+	var backOffLimit int32 = 1
+	var completions int32 = 1
+	var parallelism int32 = 1
 	labels := make(map[string]string)
 	labels["batchjobs-group"] = "batchjob1"	
 	var topologykey string = "kubernetes.io/hostname"
