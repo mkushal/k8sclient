@@ -64,6 +64,6 @@ Propose a high-level disaster recovery plan for the current architecture.
 
 # Part 2 : Technical Challenge
 ---
-I have created a script in go , which will read batch.json , fetch parameters jobName, image, requestMem & requestCpu values for each job and using podaffinity feature of kubernetes deploy the jobs on minimum number of nodes as we required. 
+I have created a script in go , which will read batch.json , fetch parameters jobName, image, requestMem & requestCpu values for each job and using podaffinity feature of kubernetes and label selector than deploy the jobs on minimum number of nodes as we required. 
 
 Script can be found at [here](https://github.com/mkushal/k8sclient/tree/main/go-client)
