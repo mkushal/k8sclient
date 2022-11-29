@@ -16,7 +16,7 @@ import (
 	resource "k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kubernetes "k8s.io/client-go/kubernetes"
-	clientcmd "k8s.io/client-go/tools/clientcmd"	
+	clientcmd "k8s.io/client-go/tools/clientcmd"
 )
 
 // BatchJobs struct which contains
@@ -26,7 +26,7 @@ type BatchJobs struct {
 }
 
 // Job struct which contains a name
-// a type 
+// a type
 type Job struct {
 	JobName    string `json:"jobName"`
 	Image      string `json:"image"`
@@ -61,10 +61,9 @@ func launchK8sJob(clientset *kubernetes.Clientset, jobName *string, image *strin
 	var completions int32 = 1
 	var parallelism int32 = 1
 	labels := make(map[string]string)
-	labels["batchjobs-group"] = "batchjob1"	
+	labels["batchjobs-group"] = "batchjob1"
 	var topologykey string = "kubernetes.io/hostname"
 
-    
 	defer func() {
 		if err := recover(); err != nil {
 			log.Println("panic occurred:", err)
@@ -75,45 +74,45 @@ func launchK8sJob(clientset *kubernetes.Clientset, jobName *string, image *strin
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      *jobName,
 			Namespace: "default",
-			Labels : labels,
+			Labels:    labels,
 		},
 		Spec: batchv1.JobSpec{
-			Template: v1.PodTemplateSpec{				
+			Template: v1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:      *jobName,
 					Namespace: "default",
-					Labels : labels,
+					Labels:    labels,
 				},
-				Spec: v1.PodSpec{					
+				Spec: v1.PodSpec{
 					Containers: []v1.Container{
 						{
-							Name:  *jobName,
-							Image: *image,							
+							Name:    *jobName,
+							Image:   *image,
 							Command: strings.Split("ls", " "),
 							Resources: v1.ResourceRequirements{
 								Requests: v1.ResourceList{
 									"cpu":    resource.MustParse(*requestCpu),
 									"memory": resource.MustParse(*requestMem),
 								},
-							},							
+							},
 						},
 					},
 					Affinity: &v1.Affinity{
-						PodAffinity: &v1.PodAffinity {
-							PreferredDuringSchedulingIgnoredDuringExecution: []v1.WeightedPodAffinityTerm {
+						PodAffinity: &v1.PodAffinity{
+							PreferredDuringSchedulingIgnoredDuringExecution: []v1.WeightedPodAffinityTerm{
 								{
 									Weight: 100,
-									PodAffinityTerm: v1.PodAffinityTerm {
-										LabelSelector: &metav1.LabelSelector {
+									PodAffinityTerm: v1.PodAffinityTerm{
+										LabelSelector: &metav1.LabelSelector{
 											MatchLabels: labels,
 										},
 										TopologyKey: topologykey,
-									},									
+									},
 								},
 							},
 						},
 					},
-					RestartPolicy: v1.RestartPolicyNever,				
+					RestartPolicy: v1.RestartPolicyNever,
 				},
 			},
 			BackoffLimit: &backOffLimit,
@@ -161,7 +160,7 @@ func main() {
 	json.Unmarshal(byteValue, &batchJobs)
 
 	// we iterate through every user within our batchjobs array and
-	// print out 
+	// print out
 	for i := 0; i < len(batchJobs.BatchJobs); i++ {
 		fmt.Println("Job Name: " + batchJobs.BatchJobs[i].JobName)
 		fmt.Println("Job Image: " + batchJobs.BatchJobs[i].Image)
@@ -178,4 +177,3 @@ func main() {
 	}
 
 }
-
