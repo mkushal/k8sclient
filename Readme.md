@@ -15,7 +15,7 @@ Considering the architecture mentioned in the diagram , with few assumtions I ca
  - For the better performance , we should use horizontal pod autoscaler.
  - For the cost optimization we should implment cluster autoscaler / karpenter or similar solution which can automatically resize the cluster capacity in case of no usage.
  - Also we can leverage AWS autoscaling group dynamic scalling policies to save the cost based on network traffic.
- - we should also implment automatic monitoring & alerting for our deployments residing in kubernetes cluster. ( Prometheus + Grafana + All required exporters )
+ - we should also implment automatic monitoring & alerting for our deployments residing in kubernetes cluster. ( Prometheus + Grafana + All required exporters + AlertManager)
  - Closely monitoring the exceptions in logs of deployments could help us proactively to avoid downtime later. (EFK / ELK Logging stack)
  - If we are using aws than for optimize the cost we can use gp3 ebs volumes, spot instances for the stateless node groups etc..
  - Apart from above things , we should have standard devops practices like IaaC (terraform or similar), CI, Container Images Security Scanning etc.. 
